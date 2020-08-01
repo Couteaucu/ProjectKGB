@@ -1,0 +1,13 @@
+{
+    "members": [
+        {
+            "id": "",
+            "debuff":[
+                {
+                    "name": "",
+                    "timeLeft": ""
+                }
+            ]
+        }
+    ]
+}
