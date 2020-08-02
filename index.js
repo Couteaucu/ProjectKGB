@@ -1,8 +1,8 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 
-const { prefix, token } = require('./config.json');
-//const { prefix, token } = require('./configTest.json');
+//const { prefix, token } = require('./config.json');
+const { prefix, token } = require('./configTest.json');
 
 //dynamic command addition
 const client = new Discord.Client();
