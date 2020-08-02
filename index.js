@@ -1,8 +1,8 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 
-const { prefix, token } = require('./config.json');
-//const { prefix, token } = require('./configTest.json');
+//const { prefix, token } = require('./config.json');
+const { prefix, token } = require('./configTest.json');
 
 //dynamic command addition
 const client = new Discord.Client();
@@ -156,7 +156,8 @@ client.on('messageDelete', async message => {
 		console.log(`A message by ${message.author.tag} was deleted.`);
 	}
 
-	if (message.guild.id == 693704390887866398) {
+	if(true){ //allow other guilds for now
+	//if (message.guild.id == 693704390887866398) {
 		client.channels.fetch('723363409243930684')
 			.then(channel => {
 				const buildOuput = () => {
