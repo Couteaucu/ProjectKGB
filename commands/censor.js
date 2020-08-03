@@ -8,7 +8,7 @@ module.exports = {
     args: true,
     usage: '<user> <amount>',
 	execute(message, args) {
-        const member = message.member;
+        const member = message.member; //just to avoid typing messsage
         
         if(member.roles.cache.some(role => role.name === 'Waifu Hunter') || member.id == message.guild.ownerID){
                 const amount = parseInt(args[1]);
