@@ -60,7 +60,7 @@ client.on('message', async message => {
 					.then(channel => {
 						const buildOuput = () => {
 							var output = "";
-							output += `Sender: ${message.author.tag}`;
+							output += `**From: ${message.author.tag}**`;
 
 							if (message.content != '') {
 								output += "\n```";
@@ -196,8 +196,8 @@ client.on('messageDelete', async message => {
 		console.log(`A message by ${message.author.tag} was deleted.`);
 	}
 
-	if (true) { //allow other guilds for now
-		//if (message.guild.id == 693704390887866398) {
+
+	if (message.guild.id != 376183399792246785) {//Ignore testing discord
 		client.channels.fetch('723363409243930684') //hidden-records Ahegao Support Group
 			.then(channel => {
 				const buildOuput = () => {
