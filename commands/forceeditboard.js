@@ -6,11 +6,11 @@ module.exports = {
     args: true,
     usage: '<operation> <string>',
     async execute(message, args, client) {
-        const guildID = message.guild.id;
+/*         const guildID = message.guild.id;
         if (guildID != 693704390887866398) {
             return message.reply('This command only works in ASG');
         }
-
+ */
         const member = message.member;
 
         //required roles in server
