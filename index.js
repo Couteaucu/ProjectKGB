@@ -125,7 +125,7 @@ client.on('message', async message => {
 
 	try {
 		//message.channel.send(command);
-		if (command.name == 'leaderboard' || command.name == 'forceeditboard') {
+		if (command.name == 'leaderboard' || command.name == 'forceeditboard' || command.name == 'send' || command.name == 'senddm') {
 			command.execute(message, args, client);
 		} else {
 			command.execute(message, args);
