@@ -1,8 +1,16 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 
-const { prefix, token } = require('./config.json');
-//const { prefix, token } = require('./configTest.json');
+//For seeing arguments
+/*
+process.argv.forEach(function (val, index, array) {
+	console.log(index + ': ' + val);
+});*/
+
+var { prefix, token } = require('./config.json');
+if(process.argv[2] == 'test'){
+	var { prefix, token } = require('./configTest.json');
+}
 
 //dynamic command addition
 const client = new Discord.Client();
@@ -156,8 +164,8 @@ client.on('messageDelete', async message => {
 		console.log(`A message by ${message.author.tag} was deleted.`);
 	}
 
-	if(true){ //allow other guilds for now
-	//if (message.guild.id == 693704390887866398) {
+	if (true) { //allow other guilds for now
+		//if (message.guild.id == 693704390887866398) {
 		client.channels.fetch('723363409243930684')
 			.then(channel => {
 				const buildOuput = () => {
@@ -183,19 +191,19 @@ client.on('messageDelete', async message => {
 							message.member.guild.owner.send('Ignoring deletion.');
 							console.log('Ignoring deletion.');
 							return true;
-						}else{
+						} else {
 							return false;
 						}
 					} catch{
 						errorNotify('Function: ignoreAuthorized', message.guild);
 					}
 				}
-				
+
 				const sendfunction = async () => {
 					try {
 						const isAuthorized = await ignoreAuthorized();
 						const output = buildOuput();
-						if(isAuthorized){
+						if (isAuthorized) {
 							return;
 						}
 						await channel.send(output);
