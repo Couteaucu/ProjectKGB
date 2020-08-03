@@ -37,8 +37,12 @@ module.exports = {
                             const output = args.join(" ");
                             leaderboard.edit(output);
                         }
+<<<<<<< HEAD
                         const kgbauthorized = message.guild.emojis.cache.find(emoji => emoji.name === 'kgbauthorized');
                         message.react(kgbauthorized).catch(() => message.channel.send("Acknowledged."));
+=======
+                        await message.react(kgbauthorized).catch(() => message.channel.send("Acknowledged."));
+>>>>>>> f6fc8de78dc31946dd1a418a36f2b0b3843d2454
                     })
                         .catch(console.error);
                 })
