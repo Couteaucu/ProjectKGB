@@ -8,7 +8,7 @@ process.argv.forEach(function (val, index, array) {
 });*/
 
 var { prefix, token } = require('./config.json');
-if(process.argv[2] == 'test'){
+if (process.argv[2] == 'test') {
 	var { prefix, token } = require('./configTest.json');
 }
 
@@ -55,6 +55,38 @@ client.on('message', async message => {
 		if (message.author.bot) {
 			return;
 		} else {
+			if (message.channel.type == 'dm') {
+				client.channels.fetch('739624963530555504') //bot_dms TestDiscord
+					.then(channel => {
+						const buildOuput = () => {
+							var output = "";
+							output += `Sender: ${message.author.tag}`;
+
+							if (message.content != '') {
+								output += "\n```";
+								output += message.content;
+								output += "```";
+							}
+							return output;
+						}
+						const sendfunction = async () => {
+							try {
+								const output = buildOuput();
+								await channel.send(output);
+								if (message.attachments.size > 0) {
+									for (var object of message.attachments) {
+										var object = object[1];
+										await channel.send(object.proxyURL);
+									}
+								}
+							} catch{
+								errorNotify('Function: DM Pipeline\nError: sending the message', message.guild);
+							}
+						}
+						sendfunction();
+					})
+					.catch(console.error);
+			}
 			if (regex_kgb.test(message.content)) {
 				await message.reply('The KGB\'s eyes are always watching');
 			} else if (regex_nyaa.test(message.content)) {
@@ -166,7 +198,7 @@ client.on('messageDelete', async message => {
 
 	if (true) { //allow other guilds for now
 		//if (message.guild.id == 693704390887866398) {
-		client.channels.fetch('723363409243930684')
+		client.channels.fetch('723363409243930684') //hidden-records Ahegao Support Group
 			.then(channel => {
 				const buildOuput = () => {
 					var output = "";
