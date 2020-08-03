@@ -16,6 +16,9 @@ module.exports = {
 
         if (member.roles.cache.some(role => role.name === 'Waifu Hunter') || member.id == message.guild.ownerID) {
             const user = client.users.cache.find(user => user.id == userid);
+            if(user == undefined){
+                return message.channel.send('Unable to find user.');
+            }
             user.send(output);
             let kgbauthorized = message.guild.emojis.cache.find(emoji => emoji.name === 'kgbauthorized');
             await message.react(kgbauthorized).catch(() => message.channel.send("Acknowledged."));
