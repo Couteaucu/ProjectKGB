@@ -138,13 +138,8 @@ module.exports = {
                         outputMessage += "\n";
                     }
 
-<<<<<<< HEAD
                     message.edit(outputMessage);
                     message.channel.send("Leadboard updated.");
-=======
-                    await message.edit(outputMessage).catch(() => message.channel.send("Error updating leaderboard."));
-                    await message.channel.send("Leadboard updated.").catch(() => console.log("Error sending ak leaderboard."));
->>>>>>> f6fc8de78dc31946dd1a418a36f2b0b3843d2454
                 })
                     .catch(console.error);
             })
