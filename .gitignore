@@ -1,4 +1,5 @@
 config.json
 configTest.json
 runlog.txt
-ProjectKGB.code-workspace
+*.code-workspace
+
