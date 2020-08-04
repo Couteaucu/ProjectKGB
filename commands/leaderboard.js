@@ -40,8 +40,8 @@ module.exports = {
         client.channels.fetch('723612703058559078')
             .then(channel => {
                 //primerMessage(channel);
-                channel.messages.fetch(messageID).then(message => {
-                    var split = message.content.split('\n');
+                channel.messages.fetch(messageID).then(messageBoard => {
+                    var split = messageBoard.content.split('\n');
 
                     var matchup = new Array(split.length);
                     var score = new Array(split.length);
@@ -138,7 +138,7 @@ module.exports = {
                         outputMessage += "\n";
                     }
 
-                    message.edit(outputMessage);
+                    messageBoard.edit(outputMessage);
                     message.channel.send("Leadboard updated.");
                 })
                     .catch(console.error);
