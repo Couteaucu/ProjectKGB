@@ -139,6 +139,7 @@ module.exports = {
                     }
 
                     message.edit(outputMessage);
+                    message.channel.send("Leadboard updated.");
                 })
                     .catch(console.error);
             })

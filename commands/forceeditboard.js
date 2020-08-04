@@ -6,11 +6,11 @@ module.exports = {
     args: true,
     usage: '<operation> <string>',
     async execute(message, args, client) {
-        const guildID = message.guild.id;
-        if (guildID != 693704390887866398) {
-            return message.reply('This command only works in ASG');
-        }
-
+        /*         const guildID = message.guild.id;
+                if (guildID != 693704390887866398) {
+                    return message.reply('This command only works in ASG');
+                }
+         */
         const member = message.member;
 
         //required roles in server
@@ -33,11 +33,12 @@ module.exports = {
                             const send = "Current Leaderboard:\nChase - Zack | 3-1\nJustin - Zach | 1-9\nJustin - Bots  | 720-14";
                             console.log("resetting leaderboard");
                             leaderboard.edit(send);
-                            
                         } else {
                             const output = args.join(" ");
                             leaderboard.edit(output);
                         }
+                        const kgbauthorized = message.guild.emojis.cache.find(emoji => emoji.name === 'kgbauthorized');
+                        message.react(kgbauthorized);
                     })
                         .catch(console.error);
                 })
