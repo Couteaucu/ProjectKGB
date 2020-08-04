@@ -220,7 +220,7 @@ client.on('messageDelete', async message => {
 						const executorObject = await message.guild.members.fetch(executor.id);
 						const user_has_role_WaifuHunter = executorObject.roles.cache.some(role => role.name === 'Waifu Hunter');
 						if (message.channel.id == 723363409243930684 && user_has_role_WaifuHunter) {
-							message.member.guild.owner.send('Ignoring deletion.');
+							//message.member.guild.owner.send('Ignoring deletion.');
 							console.log('Ignoring deletion.');
 							return true;
 						} else {
