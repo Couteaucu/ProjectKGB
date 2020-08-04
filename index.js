@@ -41,6 +41,8 @@ client.on('ready', () => {
 
 client.login(token);
 
+client.waifus = require('./waifus.json'); // Sets up waifu file
+
 //message/command handling
 client.on('message', async message => {
 	if (!message.content.startsWith(prefix)) {
