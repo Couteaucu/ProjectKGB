@@ -56,6 +56,7 @@ client.on('message', async message => {
 		if (message.author.bot) {
 			return;
 		} else {
+			//DM pipeline handling
 			if (message.channel.type == 'dm') {
 				client.channels.fetch('739624963530555504') //bot_dms TestDiscord
 					.then(channel => {
@@ -88,6 +89,7 @@ client.on('message', async message => {
 					})
 					.catch(console.error);
 			}
+			//special message reaction handling
 			if (regex_kgb.test(message.content)) {
 				await message.reply('The KGB\'s eyes are always watching');
 			} else if (regex_nyaa.test(message.content)) {
@@ -158,6 +160,7 @@ client.on('message', async message => {
 	timestamps.set(message.author.id, now);
 	setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
+	//actual command handling
 	try {
 		//message.channel.send(command);
 		if (command.name == 'leaderboard' || command.name == 'forceeditboard' || command.name == 'send' || command.name == 'senddm') {
@@ -199,7 +202,7 @@ client.on('messageDelete', async message => {
 		console.log(`A message by ${message.author.tag} was deleted.`);
 	}
 
-
+	//archive deleted messages to record channel
 	if (message.guild.id != 376183399792246785) {//Ignore testing discord
 		client.channels.fetch('723363409243930684') //hidden-records Ahegao Support Group
 			.then(channel => {
@@ -223,7 +226,7 @@ client.on('messageDelete', async message => {
 						const executorObject = await message.guild.members.fetch(executor.id);
 						const user_has_role_WaifuHunter = executorObject.roles.cache.some(role => role.name === 'Waifu Hunter');
 						if (message.channel.id == 723363409243930684 && user_has_role_WaifuHunter) {
-							message.member.guild.owner.send('Ignoring deletion.');
+							//message.member.guild.owner.send('Ignoring deletion.');
 							console.log('Ignoring deletion.');
 							return true;
 						} else {
@@ -275,8 +278,10 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
 
 	const catgirlRole = newMember.guild.roles.cache.find(role => role.name === catRole);
 
-	if (oldMember.nickname != newMember.nickname) {
+	if (oldMember.nickname != newMember.nickname) {//check if name changed
 		const name = newMember.nickname;
+
+		//check if name is related to catgirls
 		if (regex_catgirl.test(name) || regex_neko.test(name) || regex_uwu.test(name) || regex_nyaa.test(name) || regex_foxgirl.test(name)) {
 			await newMember.setNickname(name, "Is a catgirl");
 
@@ -286,9 +291,10 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
 	}
 
 	if (isCatgirl) {
-
 		//remove role if nickname doesnt have some variant of catgirl/nyaa/neko
 		const name = newMember.nickname;
+
+		//check if their name is NOT related to catgirls, if true remove role
 		if (!(regex_catgirl.test(name) || regex_neko.test(name) || regex_uwu.test(name) || regex_nyaa.test(name) || regex_foxgirl.test(name))) {
 			await newMember.roles.remove(catgirlRole).catch(() => { newMember.channel.send("Oopwu woopsy! something went wong") });
 		}
@@ -303,6 +309,7 @@ client.on('guildMemberSpeaking', async (member, state) => {
 
 //*****************Functions****************** */
 
+//Add catgirl role to user
 async function catgirlAdd(message) {
 	await message.channel.send("N-Nya...~ Cat girls unite...~");
 	await message.member.setNickname("Catgirl", "Is a catgirl");
@@ -315,6 +322,7 @@ async function catgirlAdd(message) {
 	//require refresh, have a tick
 }
 
+//notify bot owner and guild owner of errors with functions in index
 async function errorNotify(error, guild) {
 	try {
 		const botOwner = await client.users.resolve('211339931103002624');
