@@ -33,8 +33,8 @@ module.exports = {
         /*const taggedUsers = message.mentions.users.first(2);
         const user_first = taggedUsers[0];
         const user_second = taggedUsers[1];*/
-        const user_first = args[0];
-        const user_second = args[1];
+        const user_first = args[0].toLowerCase();//make sure capitalization is ignored
+        const user_second = args[1].toLowerCase();
 
         const messageID = '736524916362313739'; //bootleg workaround only works in ASG
         client.channels.fetch('723612703058559078')
@@ -45,12 +45,12 @@ module.exports = {
 
                     var matchup = new Array(split.length);
                     var score = new Array(split.length);
-                    for (var i = 0; i < matchup.length; i++) {
+                    for (var i = 0; i < matchup.length; i++) { //initialize arrays
                         matchup[i] = [];
                         score[i] = [];
                     }
 
-                    for (i = 1; i < split.length; i++) {
+                    for (i = 1; i < split.length; i++) { //fill with data from message
                         var n = i - 1;
                         var split2 = split[i].split('|');
                         var person = split2[0].split('-');
@@ -59,8 +59,8 @@ module.exports = {
                             person[j] = person[j].trim();
                             splitscore[j] = splitscore[j].trim();
                         }
-                        matchup[n][0] = person[0];
-                        matchup[n][1] = person[1];
+                        matchup[n][0] = person[0].toLowerCase();//make sure capitalization is ignored
+                        matchup[n][1] = person[1].toLowerCase();
                         score[n][0] = splitscore[0];
                         score[n][1] = splitscore[1];
                     }
@@ -78,7 +78,7 @@ module.exports = {
                         var score2 = score[i][1];
 
                         if ((user1 == person1 && user2 == person2) || (user1 == person2 && user2 == person1)) {
-                            matchIndex = i;
+                            matchIndex = i; //matchIndex is used later to know the entry to modify
                             break;
                         }
                     }
