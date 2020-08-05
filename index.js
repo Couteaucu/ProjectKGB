@@ -261,6 +261,51 @@ client.on('messageDelete', async message => {
 	}
 });
 
+//Listener for messaged edit
+client.on('messageUpdate', async (oldMessage, newMessage) => {
+
+	//archive edited messages to record channel
+	if (true) {
+		//if (message.guild.id != 376183399792246785) {//Ignore testing discord
+		client.channels.fetch('723363409243930684') //hidden-records Ahegao Support Group
+			.then(channel => {
+				const buildOuput = () => {
+					var output = "";
+
+					output += `__Edited Message__\nAuthor: ${oldMessage.author.tag}`;
+
+					output += "\nOld Message:```";
+					output += oldMessage.content;
+					output += "```";
+
+					output += "New Message:```";
+					output += newMessage.content;
+					output += "```";
+
+					return output;
+				}
+
+				const sendfunction = async () => {
+					try {
+						const output = buildOuput();
+						await channel.send(output);
+						if (oldMessage.attachments.size > 0) {
+							for (var object of oldMessage.attachments) {
+								var object = object[1];
+								await channel.send(object.proxyURL);
+							}
+						}
+					} catch{
+						errorNotify('Function: Edit Archiver\nError: sending the message', oldMessage.guild);
+					}
+				}
+				sendfunction();
+			})
+			.catch(console.error);
+	}
+});
+
+
 //Listener event: User joins the discord server.
 client.on('guildMemberAdd', async member => {
 	console.log('User ' + member.user.username + ' has joined the server.');
