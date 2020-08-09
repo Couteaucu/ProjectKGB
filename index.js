@@ -264,6 +264,10 @@ client.on('messageDelete', async message => {
 //Listener for messaged edit
 client.on('messageUpdate', async (oldMessage, newMessage) => {
 
+	if(oldMessage.content == newMessage.content){
+		return;
+	}
+
 	//archive edited messages to record channel
 	if (oldMessage.guild.id != 376183399792246785) {//Ignore testing discord
 		client.channels.fetch('723363409243930684') //hidden-records Ahegao Support Group
