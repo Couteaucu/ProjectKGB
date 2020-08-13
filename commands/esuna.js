@@ -68,7 +68,7 @@ module.exports = {
 										const debuffRole = message.guild.roles.cache.find(role => role.name === debuffList[debuff]);
 										esunaTarget.roles.remove(debuffRole);
                                         message.channel.send(`${taggedUser.username} has been esuna'd from ${debuffRole.name} with a vote of ${upvoteCount}-${downvoteCount}`);
-                                        debuffTimerRemove(client, taggedUser, debuff);
+                                        debuffTimerRemove(client, debuffTarget, debuff);
 										break; //this makes only one get removed, simply remove this and it should remove all debuffs
 									}
 								}
@@ -86,7 +86,7 @@ module.exports = {
 
 function debuffTimerRemove(client, user, debuff) {
     const debufftimers = client.debufftimers;
-    const target = user.id;
+    const target = user.user.id;
 
     delete debufftimers[target][debuff];
 

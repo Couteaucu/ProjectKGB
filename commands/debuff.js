@@ -76,11 +76,11 @@ module.exports = {
 
                                 if (!(debuffTarget.roles.cache.some(role => role.name === debuffList[debuff]))) {
                                     debuffTarget.roles.add(debuffRole);
-                                    debuffTimerAdd(client, taggedUser, debuff, upvoteCount, downvoteCount); //add timer to file
+                                    debuffTimerAdd(client, debuffTarget, debuff, upvoteCount, downvoteCount); //add timer to file
                                     var totaltime = (client.debufftimers[taggedUser.id][debuff].time) / 3600; //get time in hours
                                     message.channel.send(`${taggedUser.username} has been given ${debuffRole.name} with a vote of ${upvoteCount}-${downvoteCount} | Time: ${totaltime} hours`);
                                 } else {
-                                    debuffTimerAdd(client, taggedUser, debuff, upvoteCount, downvoteCount); //add timer to file
+                                    debuffTimerAdd(client, debuffTarget, debuff, upvoteCount, downvoteCount); //add timer to file
                                     var totaltime = (client.debufftimers[taggedUser.id][debuff].time) / 3600; //get time in hours
                                     message.channel.send(`${taggedUser.username}'s debuff ${debuffRole.name} has been extended to ${totaltime} hours`);
                                 }
@@ -103,9 +103,11 @@ module.exports = {
 
 function debuffTimerAdd(client, user, debuff, upvoteCount, downvoteCount) {
     const debufftimers = client.debufftimers;
-    const target = user.id;
+    const target = user.user.id;
+    const guild = user.guild.id;
     var currentDebuffTime = 0;
 
+    //if(debufftimers[guild][target])
     if (debufftimers[target] == undefined) { //user not in system
         debufftimers[target] = {
             [debuff]: {
