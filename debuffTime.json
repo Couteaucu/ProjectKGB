@@ -1,13 +1,7 @@
 {
-    "members": [
-        {
-            "id": "",
-            "debuff":[
-                {
-                    "name": "",
-                    "timeLeft": ""
-                }
-            ]
+    "Couteaucu#3101": {
+        "coward": {
+            "time": 57627
         }
-    ]
+    }
 }

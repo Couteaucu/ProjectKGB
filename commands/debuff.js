@@ -1,8 +1,6 @@
 const debuffList = require('../debuffList.json');
-/*const fs = require('fs');
-const fileName = '../debuffTime.json';
-const debuffTime = require(fileName);*/
-//console.log(debuffList);
+const fs = require('fs');
+
 module.exports = {
     name: 'debuff',
     description: 'assign a role that is a debuff',
@@ -10,7 +8,7 @@ module.exports = {
     guildOnly: true,
     args: true,
     usage: '<debuff> <user>',
-    execute(message, args) {
+    execute(message, args, client) {
         const debuff = args[0].toLowerCase();
 
         if (debuff == "list") {
@@ -43,16 +41,16 @@ module.exports = {
                 for (emoji of [upvote, downvote]) await sentReact.react(emoji);
 
                 const pinFunction = async () => {
-                    try{
+                    try {
                         const pinMessage = await sentReact.pin();
-                        const nextMessage = await message.channel.messages.fetch({after:pinMessage.id});
+                        const nextMessage = await message.channel.messages.fetch({ after: pinMessage.id });
                         await nextMessage.first().delete();
-                    }catch{
+                    } catch{
                         console.log('Error in pinning message');
                     }
                 }
                 pinFunction();
-                
+
                 //for (emoji of [upvote]) await sentReact.react(emoji);
                 //sentReact.awaitReactions(filter, { max: 1, time: 60000, errors: ['time'] })
                 sentReact.awaitReactions(filter, { maxUsers: 7, time: vote_time })
@@ -65,9 +63,6 @@ module.exports = {
                         } else if (isNaN(downvoteCount)) {
                             downvoteCount = 0;
                         }
-                        //console.log(downvoteCount);
-                        //console.log(upvoteCount);
-                        //console.log(downvoteCount>upvoteCount);
 
                         if (downvoteCount >= upvoteCount) {
                             message.channel.send(`The council has voted to spare ${taggedUser.username} with a vote of ${upvoteCount}-${downvoteCount}`);
@@ -80,24 +75,16 @@ module.exports = {
                                 const debuffRole = message.guild.roles.cache.find(role => role.name === debuffList[debuff]);
                                 const debuffTarget = message.mentions.members.first();
 
-                                if (debuffTarget.roles.cache.some(role => role.name !== debuffList[debuff])) {
+                                if (!(debuffTarget.roles.cache.some(role => role.name === debuffList[debuff]))) {
                                     debuffTarget.roles.add(debuffRole);
-                                    //add them to time list
+                                    debuffTimerAdd(client, taggedUser, debuff, upvoteCount, downvoteCount); //add timer to file
+                                    var totaltime = (client.debufftimers[taggedUser.tag][debuff].time) / 3600; //get time in hours
+                                    message.channel.send(`${taggedUser.username} has been given ${debuffRole.name} with a vote of ${upvoteCount}-${downvoteCount} | Time: ${totaltime} hours`);
+                                } else {
+                                    debuffTimerAdd(client, taggedUser, debuff, upvoteCount, downvoteCount); //add timer to file
+                                    var totaltime = (client.debufftimers[taggedUser.tag][debuff].time) / 3600; //get time in hours
+                                    message.channel.send(`${taggedUser.username}'s debuff ${debuffRole.name} has been extended to ${totaltime} hours`);
                                 }
-                                //time debuff
-                                switch (upvoteCount) {
-                                    case 3:
-                                    case 4:
-                                    case 5:
-                                    default:
-                                    /*fs.writeFile(fileName, JSON.stringify(debuffTime), function writeJSON(err) {
-                                        if (err) return console.log(err);
-                                        console.log(JSON.stringify(debuffTime, null, 2));
-                                        console.log('writing to ' + fileName);
-                                      });*/
-                                }
-
-                                message.channel.send(`${taggedUser.username} has been given ${debuffRole.name} with a vote of ${upvoteCount}-${downvoteCount}`);
                             }
                         }
 
@@ -114,3 +101,37 @@ module.exports = {
         }
     },
 };
+
+function debuffTimerAdd(client, user, debuff, upvoteCount, downvoteCount) {
+    const debufftimers = client.debufftimers;
+    const target = user.tag;
+    var currentDebuffTime = 0;
+
+    if (debufftimers[target] == undefined) { //user not in system
+        debufftimers[target] = {
+            [debuff]: {
+                "time": formula(currentDebuffTime, upvoteCount, downvoteCount)
+            }
+        }
+    } else if (debufftimers[target][debuff] == undefined) { //debuff not in system
+        debufftimers[target][debuff] = {
+            "time": formula(currentDebuffTime, upvoteCount, downvoteCount)
+        }
+    } else {//role already exists, add to time
+        currentDebuffTime = debufftimers[target][debuff].time;
+        debufftimers[target][debuff].time = formula(currentDebuffTime, upvoteCount);
+    }
+
+    fs.writeFile('./debuffTime.json', JSON.stringify(debufftimers, null, 4), err => {
+        if (err) return console.log('debufftimeradd failed');
+    });
+}
+
+function formula(currentDebuffTime, upvoteCount, downvoteCount) {
+    const multiplier_time = 0.3;
+    var voteratio = Math.pow(upvoteCount + 0.5, 2) - Math.pow(downvoteCount + 0.2,2.25);
+    if(voteratio < 0){ //who knows lol, hopefully this'll do something interesting in an edge case.
+        voteratio = Math.sqrt(Math.abs(voteratio));
+    }
+    return currentDebuffTime + Math.round(((86400 * multiplier_time) * voteratio));
+}

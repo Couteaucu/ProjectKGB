@@ -1,4 +1,6 @@
 const debuffList = require('../debuffList.json');
+const fs = require('fs');
+
 module.exports = {
 	name: 'esuna',
 	description: 'clear one random debuff',
@@ -6,7 +8,7 @@ module.exports = {
     guildOnly: true,
     args: true,
     usage: '<user>',
-	execute (message, args) {
+	execute (message, args, client) {
         if (!message.mentions.users.size) {
             return message.reply('YOU CANT CURE AIR, select a target');
         }
@@ -50,9 +52,6 @@ module.exports = {
                         }else if(isNaN(downvoteCount)){
                             downvoteCount = 0;
                         }
-                        //console.log(downvoteCount);
-                        //console.log(upvoteCount);
-                        //console.log(downvoteCount>upvoteCount);
                         
                          if(downvoteCount >= upvoteCount){
                              message.channel.send(`The council has voted to not esuna ${taggedUser.username} with a vote of ${upvoteCount}-${downvoteCount}`);
@@ -69,7 +68,8 @@ module.exports = {
 									if (esunaTarget.roles.cache.some(role => role.name === debuffList[debuff])) {
 										const debuffRole = message.guild.roles.cache.find(role => role.name === debuffList[debuff]);
 										esunaTarget.roles.remove(debuffRole);
-										message.channel.send(`${taggedUser.username} has been esuna'd from ${debuffRole.name} with a vote of ${upvoteCount}-${downvoteCount}`);
+                                        message.channel.send(`${taggedUser.username} has been esuna'd from ${debuffRole.name} with a vote of ${upvoteCount}-${downvoteCount}`);
+                                        debuffTimerRemove(client, taggedUser, debuff);
 										break; //this makes only one get removed, simply remove this and it should remove all debuffs
 									}
 								}
@@ -84,3 +84,14 @@ module.exports = {
         });
 	},
 };
+
+function debuffTimerRemove(client, user, debuff) {
+    const debufftimers = client.debufftimers;
+    const target = user.tag;
+
+    delete debufftimers[target][debuff];
+
+    fs.writeFile('./debuffTime.json', JSON.stringify(debufftimers, null, 4), err => {
+        if (err) return console.log('debufftimerremove failed');
+    });
+}
