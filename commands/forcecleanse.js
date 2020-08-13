@@ -6,7 +6,7 @@ module.exports = {
     guildOnly: true,
     args: true,
     usage: '<user>',
-    execute(message, args) {
+    execute(message, args, client) {
         const member = message.member;
 
         //required roles in server
@@ -72,7 +72,6 @@ module.exports = {
                         if (downvoteCount >= upvoteCount) {
                             message.channel.send(`The council has voted to not esuna ${taggedUser.username} with a vote of ${upvoteCount}-${downvoteCount}`);
                         } else {
-                            console.log(upvoteCount);
                             if (upvoteCount < requiredVotes) {
                                 message.channel.send(`The force cleanse on ${taggedUser.username} failed. Only ${upvoteCount} upvotes out of ${requiredVotes} were made.`);
                             } else {
@@ -83,6 +82,7 @@ module.exports = {
                                     if (esunaTarget.roles.cache.some(role => role.name === debuffList[debuff])) {
                                         const debuffRole = message.guild.roles.cache.find(role => role.name === debuffList[debuff]);
                                         esunaTarget.roles.remove(debuffRole);
+                                        debuffTimerRemove(client, esunaTarget, debuff);
                                         message.channel.send(`${taggedUser.username} has been force cleanse'd from ${debuffRole.name} with a vote of ${upvoteCount}-${downvoteCount}`);
                                     }
                                 }
@@ -106,3 +106,15 @@ module.exports = {
 
     },
 };
+
+function debuffTimerRemove(client, user, debuff) {
+    const debufftimers = client.debufftimers;
+    const target = user.user.id;
+    const guild = user.guild.id;
+
+    delete debufftimers[guild][target][debuff];
+
+    fs.writeFile('./debuffTime.json', JSON.stringify(debufftimers, null, 4), err => {
+        if (err) return console.log('debufftimerremove failed');
+    });
+}

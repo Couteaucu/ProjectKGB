@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Discord = require('discord.js');
+const debuffList = require('./debuffList.json');
 
 //For seeing arguments
 /*
@@ -19,6 +20,7 @@ client.commands = new Discord.Collection();
 //generate variables
 const cooldowns = new Discord.Collection();
 const nekotimer = new Discord.Collection();
+client.debufftimers = require('./debuffTime.json'); //Add debuff timers
 
 //regex
 const regex_uwu = /((uwu)+)/i;
@@ -46,6 +48,8 @@ for (const file of commandFiles) {
 //Bot start
 client.on('ready', () => {
 	console.log('Project: KGB is now active');
+	const debuffInterval = 900000;
+	setInterval(() => { debuffTimer(client, debuffInterval) }, debuffInterval);
 });
 
 client.login(token);
@@ -163,7 +167,7 @@ client.on('message', async message => {
 	//actual command handling
 	try {
 		//message.channel.send(command);
-		if (command.name == 'leaderboard' || command.name == 'forceeditboard' || command.name == 'send' || command.name == 'senddm') {
+		if (command.name == 'leaderboard' || command.name == 'forceeditboard' || command.name == 'send' || command.name == 'senddm' || command.name == 'debuff' || command.name == 'esuna' || command.name == 'forcecleanse') {
 			command.execute(message, args, client);
 		} else {
 			command.execute(message, args);
@@ -264,7 +268,7 @@ client.on('messageDelete', async message => {
 //Listener for messaged edit
 client.on('messageUpdate', async (oldMessage, newMessage) => {
 
-	if(oldMessage.content == newMessage.content){
+	if (oldMessage.content == newMessage.content) {
 		return;
 	}
 
@@ -356,6 +360,57 @@ client.on('guildMemberSpeaking', async (member, state) => {
 });
 
 //*****************Functions****************** */
+
+function debuffTimerRemove(client, guild, user, debuff) {
+	const debufftimers = client.debufftimers;
+
+	delete debufftimers[guild][user][debuff];
+
+	fs.writeFile('debuffTime.json', JSON.stringify(debufftimers, null, 4), err => {
+		if (err) return console.log('debufftimerremove failed');
+	});
+}
+
+//Debuff timer function
+async function debuffTimer(client, debuffInterval) {
+	debufftimers = client.debufftimers;
+	debuffInterval = debuffInterval / 1000; //convert to seconds from milliseconds
+	for (var guild of Object.keys(debufftimers)) {
+		for (var user of Object.keys(debufftimers[guild])) {
+			for (var debuff of Object.keys(debufftimers[guild][user])) {
+				debufftimers[guild][user][debuff].time -= debuffInterval;
+				var debuffTime = debufftimers[guild][user][debuff].time;
+				//if(debuffTime <= 0){
+				try {
+					const guildObject = client.guilds.cache.find(searchGuild => searchGuild.id == guild);
+					const target = guildObject.members.cache.find(member => member.id == user)
+					const debuffRole = target.guild.roles.cache.find(role => role.name === debuffList[debuff]);
+
+					target.roles.remove(debuffRole);
+
+					debuffTimerRemove(client, guild, user, debuff);
+					console.log(`Timer expired: ${target.user.tag} ${debuffRole.name}`);
+
+					if (guild == 693704390887866398) {//ASG
+						client.channels.fetch('724410438816890951') //bot channel Ahegao Support Group
+							.then(channel => {
+								channel.send(`Timer expired: ${target.user.tag} ${debuffRole.name}`);
+							})
+							.catch(console.error);
+					}
+				} catch{
+					console.log("error with debuffTimer");
+				}
+				//}
+				console.log(debuffTime);
+			}
+		}
+	}
+
+	fs.writeFile('./debuffTime.json', JSON.stringify(debufftimers, null, 4), err => {
+		if (err) return console.log('debufftimerremove failed');
+	});
+}
 
 //Add catgirl role to user
 async function catgirlAdd(message) {
