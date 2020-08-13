@@ -72,7 +72,6 @@ module.exports = {
                         if (downvoteCount >= upvoteCount) {
                             message.channel.send(`The council has voted to not esuna ${taggedUser.username} with a vote of ${upvoteCount}-${downvoteCount}`);
                         } else {
-                            console.log(upvoteCount);
                             if (upvoteCount < requiredVotes) {
                                 message.channel.send(`The force cleanse on ${taggedUser.username} failed. Only ${upvoteCount} upvotes out of ${requiredVotes} were made.`);
                             } else {
@@ -110,7 +109,7 @@ module.exports = {
 
 function debuffTimerRemove(client, user, debuff) {
     const debufftimers = client.debufftimers;
-    const target = user.tag;
+    const target = user.id;
 
     delete debufftimers[target][debuff];
 

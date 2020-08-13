@@ -36,7 +36,7 @@ module.exports = {
 
             //const vote_time = 3600000; //1 hour
             const vote_time = 900000; //15 minutes
-            const requiredVotes = 3;
+            const requiredVotes = 1;
             message.channel.send(`Give ${taggedUser.username} the \'${debuff}\' debuff? ${requiredVotes} needed to pass. (Vote resolves in ${vote_time / 1000} seconds)`).then(async sentReact => {
                 for (emoji of [upvote, downvote]) await sentReact.react(emoji);
 
@@ -53,7 +53,7 @@ module.exports = {
 
                 //for (emoji of [upvote]) await sentReact.react(emoji);
                 //sentReact.awaitReactions(filter, { max: 1, time: 60000, errors: ['time'] })
-                sentReact.awaitReactions(filter, { maxUsers: 7, time: vote_time })
+                sentReact.awaitReactions(filter, { maxUsers: 2, time: vote_time })
                     .then(collected => {
                         let upvoteCount = parseInt(collected.filter(u => u.emoji.name === 'upvote').map(u => u.count), 10) - 1;
                         let downvoteCount = parseInt(collected.filter(u => u.emoji.name === 'downvote').map(u => u.count), 10) - 1;
@@ -67,7 +67,6 @@ module.exports = {
                         if (downvoteCount >= upvoteCount) {
                             message.channel.send(`The council has voted to spare ${taggedUser.username} with a vote of ${upvoteCount}-${downvoteCount}`);
                         } else {
-                            console.log(upvoteCount);
                             if (upvoteCount < requiredVotes) {
                                 message.channel.send(`The vote to debuff ${taggedUser.username} with ${debuffList[debuff]} failed with Only ${upvoteCount} upvotes out of ${requiredVotes}.`);
                             } else {
@@ -78,11 +77,11 @@ module.exports = {
                                 if (!(debuffTarget.roles.cache.some(role => role.name === debuffList[debuff]))) {
                                     debuffTarget.roles.add(debuffRole);
                                     debuffTimerAdd(client, taggedUser, debuff, upvoteCount, downvoteCount); //add timer to file
-                                    var totaltime = (client.debufftimers[taggedUser.tag][debuff].time) / 3600; //get time in hours
+                                    var totaltime = (client.debufftimers[taggedUser.id][debuff].time) / 3600; //get time in hours
                                     message.channel.send(`${taggedUser.username} has been given ${debuffRole.name} with a vote of ${upvoteCount}-${downvoteCount} | Time: ${totaltime} hours`);
                                 } else {
                                     debuffTimerAdd(client, taggedUser, debuff, upvoteCount, downvoteCount); //add timer to file
-                                    var totaltime = (client.debufftimers[taggedUser.tag][debuff].time) / 3600; //get time in hours
+                                    var totaltime = (client.debufftimers[taggedUser.id][debuff].time) / 3600; //get time in hours
                                     message.channel.send(`${taggedUser.username}'s debuff ${debuffRole.name} has been extended to ${totaltime} hours`);
                                 }
                             }
@@ -104,7 +103,7 @@ module.exports = {
 
 function debuffTimerAdd(client, user, debuff, upvoteCount, downvoteCount) {
     const debufftimers = client.debufftimers;
-    const target = user.tag;
+    const target = user.id;
     var currentDebuffTime = 0;
 
     if (debufftimers[target] == undefined) { //user not in system
@@ -119,7 +118,7 @@ function debuffTimerAdd(client, user, debuff, upvoteCount, downvoteCount) {
         }
     } else {//role already exists, add to time
         currentDebuffTime = debufftimers[target][debuff].time;
-        debufftimers[target][debuff].time = formula(currentDebuffTime, upvoteCount);
+        debufftimers[target][debuff].time = formula(currentDebuffTime, upvoteCount, downvoteCount);
     }
 
     fs.writeFile('./debuffTime.json', JSON.stringify(debufftimers, null, 4), err => {
