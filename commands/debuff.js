@@ -77,11 +77,11 @@ module.exports = {
                                 if (!(debuffTarget.roles.cache.some(role => role.name === debuffList[debuff]))) {
                                     debuffTarget.roles.add(debuffRole);
                                     debuffTimerAdd(client, debuffTarget, debuff, upvoteCount, downvoteCount); //add timer to file
-                                    var totaltime = (client.debufftimers[taggedUser.id][debuff].time) / 3600; //get time in hours
+                                    var totaltime = (client.debufftimers[message.guild.id][taggedUser.id][debuff].time) / 3600; //get time in hours
                                     message.channel.send(`${taggedUser.username} has been given ${debuffRole.name} with a vote of ${upvoteCount}-${downvoteCount} | Time: ${totaltime} hours`);
                                 } else {
                                     debuffTimerAdd(client, debuffTarget, debuff, upvoteCount, downvoteCount); //add timer to file
-                                    var totaltime = (client.debufftimers[taggedUser.id][debuff].time) / 3600; //get time in hours
+                                    var totaltime = (client.debufftimers[message.guild.id][taggedUser.id][debuff].time) / 3600; //get time in hours
                                     message.channel.send(`${taggedUser.username}'s debuff ${debuffRole.name} has been extended to ${totaltime} hours`);
                                 }
                             }
@@ -107,20 +107,27 @@ function debuffTimerAdd(client, user, debuff, upvoteCount, downvoteCount) {
     const guild = user.guild.id;
     var currentDebuffTime = 0;
 
-    //if(debufftimers[guild][target])
-    if (debufftimers[target] == undefined) { //user not in system
-        debufftimers[target] = {
+    if(debufftimers[guild] == undefined){ //guild not in system
+        debufftimers[guild] = {
+            [target]: {
+                [debuff]: {
+                    "time": formula(currentDebuffTime, upvoteCount, downvoteCount)
+                }
+            }
+        }
+    } else if (debufftimers[guild][target] == undefined) { //user not in system
+        debufftimers[guild][target] = {
             [debuff]: {
                 "time": formula(currentDebuffTime, upvoteCount, downvoteCount)
             }
         }
-    } else if (debufftimers[target][debuff] == undefined) { //debuff not in system
-        debufftimers[target][debuff] = {
+    } else if (debufftimers[guild][target][debuff] == undefined) { //debuff not in system
+        debufftimers[guild][target][debuff] = {
             "time": formula(currentDebuffTime, upvoteCount, downvoteCount)
         }
     } else {//role already exists, add to time
-        currentDebuffTime = debufftimers[target][debuff].time;
-        debufftimers[target][debuff].time = formula(currentDebuffTime, upvoteCount, downvoteCount);
+        currentDebuffTime = debufftimers[guild][target][debuff].time;
+        debufftimers[guild][target][debuff].time = formula(currentDebuffTime, upvoteCount, downvoteCount);
     }
 
     fs.writeFile('./debuffTime.json', JSON.stringify(debufftimers, null, 4), err => {

@@ -82,7 +82,7 @@ module.exports = {
                                     if (esunaTarget.roles.cache.some(role => role.name === debuffList[debuff])) {
                                         const debuffRole = message.guild.roles.cache.find(role => role.name === debuffList[debuff]);
                                         esunaTarget.roles.remove(debuffRole);
-                                        debuffTimerRemove(client, debuffTarget, debuff);
+                                        debuffTimerRemove(client, esunaTarget, debuff);
                                         message.channel.send(`${taggedUser.username} has been force cleanse'd from ${debuffRole.name} with a vote of ${upvoteCount}-${downvoteCount}`);
                                     }
                                 }
@@ -110,8 +110,9 @@ module.exports = {
 function debuffTimerRemove(client, user, debuff) {
     const debufftimers = client.debufftimers;
     const target = user.user.id;
+    const guild = user.guild.id;
 
-    delete debufftimers[target][debuff];
+    delete debufftimers[guild][target][debuff];
 
     fs.writeFile('./debuffTime.json', JSON.stringify(debufftimers, null, 4), err => {
         if (err) return console.log('debufftimerremove failed');

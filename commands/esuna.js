@@ -25,7 +25,7 @@ module.exports = {
 
         //const vote_time = 3600000; //1 hour
         const vote_time = 900000; //15 minutes
-		const requiredVotes = 5;
+		const requiredVotes = 1;
         message.channel.send(`Esuna ${taggedUser.username}? ${requiredVotes} needed to pass. (Vote resolves in ${vote_time/1000} seconds)`).then(async sentReact => {
             for (emoji of [upvote, downvote]) await sentReact.react(emoji);
 
@@ -42,7 +42,7 @@ module.exports = {
             
             //for (emoji of [upvote]) await sentReact.react(emoji);
             //sentReact.awaitReactions(filter, { max: 1, time: 60000, errors: ['time'] })
-            sentReact.awaitReactions(filter, {maxUsers: 9, time: vote_time})
+            sentReact.awaitReactions(filter, {maxUsers: 2, time: vote_time})
                     .then(collected =>{
                         let upvoteCount = parseInt(collected.filter(u=> u.emoji.name === 'upvote').map(u => u.count), 10) - 1;
                         let downvoteCount = parseInt(collected.filter(u=> u.emoji.name === 'downvote').map(u => u.count),10) - 1;
@@ -68,7 +68,7 @@ module.exports = {
 										const debuffRole = message.guild.roles.cache.find(role => role.name === debuffList[debuff]);
 										esunaTarget.roles.remove(debuffRole);
                                         message.channel.send(`${taggedUser.username} has been esuna'd from ${debuffRole.name} with a vote of ${upvoteCount}-${downvoteCount}`);
-                                        debuffTimerRemove(client, debuffTarget, debuff);
+                                        debuffTimerRemove(client, esunaTarget, debuff);
 										break; //this makes only one get removed, simply remove this and it should remove all debuffs
 									}
 								}
@@ -87,8 +87,9 @@ module.exports = {
 function debuffTimerRemove(client, user, debuff) {
     const debufftimers = client.debufftimers;
     const target = user.user.id;
+    const guild = user.guild.id;
 
-    delete debufftimers[target][debuff];
+    delete debufftimers[guild][target][debuff];
 
     fs.writeFile('./debuffTime.json', JSON.stringify(debufftimers, null, 4), err => {
         if (err) return console.log('debufftimerremove failed');
