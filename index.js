@@ -380,28 +380,28 @@ async function debuffTimer(client, debuffInterval) {
 			for (var debuff of Object.keys(debufftimers[guild][user])) {
 				debufftimers[guild][user][debuff].time -= debuffInterval;
 				var debuffTime = debufftimers[guild][user][debuff].time;
-				//if(debuffTime <= 0){
-				try {
-					const guildObject = client.guilds.cache.find(searchGuild => searchGuild.id == guild);
-					const target = guildObject.members.cache.find(member => member.id == user)
-					const debuffRole = target.guild.roles.cache.find(role => role.name === debuffList[debuff]);
+				if (debuffTime <= 0) {
+					try {
+						const guildObject = client.guilds.cache.find(searchGuild => searchGuild.id == guild);
+						const target = guildObject.members.cache.find(member => member.id == user)
+						const debuffRole = target.guild.roles.cache.find(role => role.name === debuffList[debuff]);
 
-					target.roles.remove(debuffRole);
+						target.roles.remove(debuffRole);
 
-					debuffTimerRemove(client, guild, user, debuff);
-					console.log(`Timer expired: ${target.user.tag} ${debuffRole.name}`);
+						debuffTimerRemove(client, guild, user, debuff);
+						console.log(`Timer expired: ${target.user.tag} ${debuffRole.name}`);
 
-					if (guild == 693704390887866398) {//ASG
-						client.channels.fetch('724410438816890951') //bot channel Ahegao Support Group
-							.then(channel => {
-								channel.send(`Timer expired: ${target.user.tag} ${debuffRole.name}`);
-							})
-							.catch(console.error);
+						if (guild == 693704390887866398) {//ASG
+							client.channels.fetch('724410438816890951') //bot channel Ahegao Support Group
+								.then(channel => {
+									channel.send(`Timer expired: ${target.user.tag} ${debuffRole.name}`);
+								})
+								.catch(console.error);
+						}
+					} catch{
+						console.log("error with debuffTimer");
 					}
-				} catch{
-					console.log("error with debuffTimer");
 				}
-				//}
 				console.log(debuffTime);
 			}
 		}
