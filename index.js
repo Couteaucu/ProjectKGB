@@ -375,9 +375,9 @@ function debuffTimerRemove(client, guild, user, debuff) {
 async function debuffTimer(client, debuffInterval) {
 	debufftimers = client.debufftimers;
 	debuffInterval = debuffInterval / 1000; //convert to seconds from milliseconds
-	for (var guild of Object.keys(debufftimers)) {
-		for (var user of Object.keys(debufftimers[guild])) {
-			for (var debuff of Object.keys(debufftimers[guild][user])) {
+	for (var guild in debufftimers) {
+		for (var user in debufftimers[guild]) {
+			for (var debuff in debufftimers[guild][user]) {
 				debufftimers[guild][user][debuff].time -= debuffInterval;
 				var debuffTime = debufftimers[guild][user][debuff].time;
 				if (debuffTime <= 0) {
