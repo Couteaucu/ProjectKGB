@@ -18,29 +18,6 @@ module.exports = {
             }
             message.channel.send(debuffString);
             return;
-        } else if (debuff == "timer") {
-            debufftimers = client.debufftimers;
-            const guild = message.guild.id;
-            var output = "";
-            output += `__Debuff Timers__`;
-            output += "\n```";
-
-            for (var user of Object.keys(debufftimers[guild])) {
-                const target = message.guild.members.cache.find(member => member.id == user);
-                output += `${target.user.tag}:\n`;
-
-                for (var debuffID of Object.keys(debufftimers[guild][user])) {
-                    const debuffTime = debufftimers[guild][user][debuffID].time;
-                    const debuffName = debuffList[debuffID];
-                    
-                    var totaltime = ((debufftimers[message.guild.id][target.user.id][debuffID].time) / 3600).toFixed(); //get time in hours
-                    output += (`\t${debuffName} | ${totaltime} hours\n`);
-                }
-            }
-
-            output += "\n```";
-            message.channel.send(output)
-            return;
         } else if (!message.mentions.users.size) {
             return message.reply('YOU CANT DEBUFF AIR, select a target');
         }

@@ -167,7 +167,7 @@ client.on('message', async message => {
 	//actual command handling
 	try {
 		//message.channel.send(command);
-		if (command.name == 'leaderboard' || command.name == 'forceeditboard' || command.name == 'send' || command.name == 'senddm' || command.name == 'debuff' || command.name == 'esuna' || command.name == 'forcecleanse') {
+		if (command.name == 'leaderboard' || command.name == 'forceeditboard' || command.name == 'send' || command.name == 'senddm' || command.name == 'debuff' || command.name == 'esuna' || command.name == 'forcecleanse' || command.name == 'timer') {
 			command.execute(message, args, client);
 		} else {
 			command.execute(message, args);
