@@ -167,7 +167,7 @@ client.on('message', async message => {
 	//actual command handling
 	try {
 		//message.channel.send(command);
-		if (command.name == 'leaderboard' || command.name == 'forceeditboard' || command.name == 'send' || command.name == 'senddm' || command.name == 'debuff' || command.name == 'esuna' || command.name == 'forcecleanse') {
+		if (command.name == 'leaderboard' || command.name == 'forceeditboard' || command.name == 'send' || command.name == 'senddm' || command.name == 'debuff' || command.name == 'esuna' || command.name == 'forcecleanse' || command.name == 'timer') {
 			command.execute(message, args, client);
 		} else {
 			command.execute(message, args);
@@ -375,9 +375,9 @@ function debuffTimerRemove(client, guild, user, debuff) {
 async function debuffTimer(client, debuffInterval) {
 	debufftimers = client.debufftimers;
 	debuffInterval = debuffInterval / 1000; //convert to seconds from milliseconds
-	for (var guild of Object.keys(debufftimers)) {
-		for (var user of Object.keys(debufftimers[guild])) {
-			for (var debuff of Object.keys(debufftimers[guild][user])) {
+	for (var guild in debufftimers) {
+		for (var user in debufftimers[guild]) {
+			for (var debuff in debufftimers[guild][user]) {
 				debufftimers[guild][user][debuff].time -= debuffInterval;
 				var debuffTime = debufftimers[guild][user][debuff].time;
 				if (debuffTime <= 0) {
