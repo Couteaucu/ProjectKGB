@@ -36,7 +36,7 @@ module.exports = {
 
             //const vote_time = 3600000; //1 hour
             const vote_time = 900000; //15 minutes
-            const requiredVotes = 3;
+            const requiredVotes = 1;
             message.channel.send(`Give ${taggedUser.username} the \'${debuff}\' debuff? ${requiredVotes} needed to pass. (Vote resolves in ${vote_time / 1000} seconds)`).then(async sentReact => {
                 for (emoji of [upvote, downvote]) await sentReact.react(emoji);
 
@@ -53,7 +53,7 @@ module.exports = {
 
                 //for (emoji of [upvote]) await sentReact.react(emoji);
                 //sentReact.awaitReactions(filter, { max: 1, time: 60000, errors: ['time'] })
-                sentReact.awaitReactions(filter, { maxUsers: 7, time: vote_time })
+                sentReact.awaitReactions(filter, { maxUsers: 2, time: vote_time })
                     .then(collected => {
                         let upvoteCount = parseInt(collected.filter(u => u.emoji.name === 'upvote').map(u => u.count), 10) - 1;
                         let downvoteCount = parseInt(collected.filter(u => u.emoji.name === 'downvote').map(u => u.count), 10) - 1;
@@ -77,12 +77,14 @@ module.exports = {
                                 if (!(debuffTarget.roles.cache.some(role => role.name === debuffList[debuff]))) {
                                     debuffTarget.roles.add(debuffRole);
                                     debuffTimerAdd(client, debuffTarget, debuff, upvoteCount, downvoteCount); //add timer to file
-                                    var totaltime = ((client.debufftimers[message.guild.id][taggedUser.id][debuff].time) / 3600).toFixed(); //get time in hours
-                                    message.channel.send(`${taggedUser.username} has been given ${debuffRole.name} with a vote of ${upvoteCount}-${downvoteCount} | Time: ${totaltime} hours`);
+                                    var totaltimehours = ((client.debufftimers[message.guild.id][taggedUser.id][debuff].time) / 3600).toFixed(); //get time in hours
+                                    var totaltimedays = (totaltimehours/24).toFixed(2); //get time in days
+                                    message.channel.send(`${taggedUser.username} has been given ${debuffRole.name} with a vote of ${upvoteCount}-${downvoteCount} | Time: ${totaltimedays} days (${totaltimehours} hours)`);
                                 } else {
                                     debuffTimerAdd(client, debuffTarget, debuff, upvoteCount, downvoteCount); //add timer to file
-                                    var totaltime = ((client.debufftimers[message.guild.id][taggedUser.id][debuff].time) / 3600).toFixed(); //get time in hours
-                                    message.channel.send(`${taggedUser.username}'s debuff ${debuffRole.name} has been extended to ${totaltime} hours`);
+                                    var totaltimehours = ((client.debufftimers[message.guild.id][taggedUser.id][debuff].time) / 3600).toFixed(); //get time in hours
+                                    var totaltimedays = (totaltimehours/24).toFixed(2); //get time in days
+                                    message.channel.send(`${taggedUser.username}'s debuff ${debuffRole.name} has been extended to ${totaltimedays} days (${totaltimehours} hours)`);
                                 }
                             }
                         }

@@ -40,7 +40,13 @@ module.exports = {
                         const debuffName = debuffList[debuffID];
 
                         var totaltime = ((debufftimers[message.guild.id][target.user.id][debuffID].time) / 3600).toFixed(); //get time in hours
-                        output += (`\t${debuffName} | ${totaltime} hours\n`);
+                        if(totaltime > 48){
+                            totaltime = (totaltime/24).toFixed(2);
+                            output += (`\t${debuffName} | ${totaltime} days\n`);
+                        }else{
+                            output += (`\t${debuffName} | ${totaltime} hours\n`);
+                        }
+                        
                     }
                 }
                 output += "\n```";
