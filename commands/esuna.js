@@ -25,7 +25,8 @@ module.exports = {
 
         //const vote_time = 3600000; //1 hour
         const vote_time = 900000; //15 minutes
-		const requiredVotes = 5;
+        const requiredVotes = 5;
+        const maxUsers = 999;
         message.channel.send(`Esuna ${taggedUser.username}? ${requiredVotes} needed to pass. (Vote resolves in ${vote_time/1000} seconds)`).then(async sentReact => {
             for (emoji of [upvote, downvote]) await sentReact.react(emoji);
 
@@ -42,7 +43,7 @@ module.exports = {
             
             //for (emoji of [upvote]) await sentReact.react(emoji);
             //sentReact.awaitReactions(filter, { max: 1, time: 60000, errors: ['time'] })
-            sentReact.awaitReactions(filter, {maxUsers: 9, time: vote_time})
+            sentReact.awaitReactions(filter, {maxUsers: maxUsers, time: vote_time})
                     .then(collected =>{
                         let upvoteCount = parseInt(collected.filter(u=> u.emoji.name === 'upvote').map(u => u.count), 10) - 1;
                         let downvoteCount = parseInt(collected.filter(u=> u.emoji.name === 'downvote').map(u => u.count),10) - 1;
