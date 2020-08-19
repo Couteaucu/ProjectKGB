@@ -4,15 +4,15 @@ module.exports = {
 	aliases: ['icon', 'pfp'],
 	cooldown: 0,
     guildOnly: false,
-    args: true,
+    args: false,
 	usage: '<user>',
 	execute(message) {
 		if (!message.mentions.users.size) {
-			return message.channel.send(`Your avatar: <${message.author.displayAvatarURL({ dynamic: true })}>`);
+			return message.channel.send(`${message.author.avatarURL({ format: "png", dynamic: true })}`);
 		}
 
 		const avatarList = message.mentions.users.map(user => {
-			return `${user.username}'s avatar: <${user.displayAvatarURL({ dynamic: true })}>`;
+			return `${user.displayAvatarURL({ format: "png", dynamic: true })}`;
 		});
 
 		message.channel.send(avatarList);
