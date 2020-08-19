@@ -270,7 +270,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
 
 	if (oldMessage.content == newMessage.content) {
 		return;
-	}else if(message.channel.id == 723612703058559078){
+	}else if(oldMessage.channel.id == 723612703058559078){ //leaderboard channel
 		return;
 	}
 
