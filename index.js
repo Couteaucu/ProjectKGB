@@ -134,7 +134,7 @@ client.on('message', async message => {
 
 	//check for argiments and supply usage
 	if (command.args && !args.length) {
-		let reply = `You seem to be missing some arguments, and a brain ${message.author}!`;
+		let reply = `You seem to be missing some arguments ${message.author}!`;
 
 		if (command.usage) {
 			reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
