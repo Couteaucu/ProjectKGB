@@ -8,7 +8,7 @@ module.exports = {
 	usage: '<user>',
 	execute(message) {
 		if (!message.mentions.users.size) {
-			return message.channel.send(`${message.author.avatarURL({ format: "png", dynamic: true })}`);
+			return message.channel.send(`${message.author.displayAvatarURL({ format: "png", dynamic: true })}`);
 		}
 
 		const avatarList = message.mentions.users.map(user => {
