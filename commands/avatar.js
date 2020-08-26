@@ -5,16 +5,25 @@ module.exports = {
 	cooldown: 0,
     guildOnly: false,
     args: false,
-	usage: '<user>',
-	execute(message) {
-		if (!message.mentions.users.size) {
-			return message.channel.send(`${message.author.displayAvatarURL({ format: "png", dynamic: true })}`);
+	usage: '<@user or ID>',
+	execute(message, args, client) {
+		if (message.mentions.users.size) {
+			const avatarList = message.mentions.users.map(user => {
+				return `${user.displayAvatarURL({ format: "png", dynamic: true })}`;
+			});
+			message.channel.send(avatarList);
+		}else{
+			const userID = args[0];
+			if(userID){
+				client.users.fetch(userID)
+				.then(user => {
+					return message.channel.send(`${user.displayAvatarURL({ format: "png", dynamic: true })}`);
+				})
+				.catch(() => {return message.channel.send("error finding user, make sure you are sending an ID")});
+			}else{
+				return message.channel.send(`${message.author.displayAvatarURL({ format: "png", dynamic: true })}`);
+			}
 		}
 
-		const avatarList = message.mentions.users.map(user => {
-			return `${user.displayAvatarURL({ format: "png", dynamic: true })}`;
-		});
-
-		message.channel.send(avatarList);
 	},
 };
