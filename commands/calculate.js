@@ -1,7 +1,7 @@
 module.exports = {
     name: 'calculate',
     description: 'Calculate debuff time',
-    aliases: ['formula', 'algorithim'],
+    aliases: ['formula', 'algorithm'],
     cooldown: 0,
     guildOnly: false,
     args: true,
