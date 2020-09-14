@@ -17,7 +17,7 @@ module.exports = {
             return message.reply('You need a target.');
         }
 
-        const taggedUser = message.mentions.users.first();
+        const taggedUser = message.mentions.members.first();
 
         //required roles in server
         const role_WaifuHunter = member.guild.roles.cache.find(role => role.name === 'Waifu Hunter');
