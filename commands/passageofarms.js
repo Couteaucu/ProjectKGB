@@ -1,5 +1,5 @@
 module.exports = {
-    name: 'passofarms',
+    name: 'passageofarms',
     description: 'protect',
     cooldown: 5,
     guildOnly: false,
