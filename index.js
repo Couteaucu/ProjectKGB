@@ -32,7 +32,10 @@ const regex_catgirl = /(cat){1}\s*(girl)+/i;
 const regex_foxgirl = /(fox){1}\s*(girl)+/i;
 const regex_neko = /(neko){1}(mimi)?/i;
 const regex_chase = /(chase){1}/i;
-const regex_cat = /(Cat.){1}/;
+const regex_cat = /(cat){1}/i;
+const regex_cat1 = /(cat){1}/;
+const regex_cat3 = /^(Cat){1}$/;
+const regex_cat2 = /(Cat\.){1}/;
 const catRole = 'Nekomimi';
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
@@ -107,7 +110,15 @@ client.on('message', async message => {
 			} else if (regex_chase.test(message.content)) {
 				//await message.channel.send(quote('chase_attractive')).catch(() => errorNotify("regex_chase", message.guild));
 			} else if (regex_cat.test(message.content)){
-				message.channel.send("Cat.");
+				if(regex_cat1.test(message.content)){
+					message.channel.send("cat");
+				}else if(regex_cat2.test(message.content)){
+					message.channel.send("Cat.");
+				}else if (regex_cat3.test(message.content)){
+					message.channel.send("Cat");
+				}else{
+					message.channel.send("Cat.");
+				}
 			}
 
 			if (regex_kgb_space.test(message.content)) {
