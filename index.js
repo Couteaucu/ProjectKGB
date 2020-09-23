@@ -21,6 +21,7 @@ client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
 const nekotimer = new Discord.Collection();
 client.debufftimers = require('./debuffTime.json'); //Add debuff timers
+var deactivated = false;
 
 //regex
 const regex_uwu = /((uwu)+)/i;
@@ -37,6 +38,8 @@ const regex_cat1 = /(cat){1}/;
 const regex_cat3 = /^(Cat){1}$/;
 const regex_cat2 = /(Cat\.){1}/;
 const catRole = 'Nekomimi';
+const stop = /(fuck off){1}/i;
+const start = /(come back){1}/i;
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -63,6 +66,21 @@ client.on('message', async message => {
 	if (!message.content.startsWith(prefix)) {
 		if (message.author.bot) {
 			return;
+		} else if (message.mentions.has(client.user)) {
+			if (stop.test(message.content)) {
+				deactivated = true;
+
+				//let kgbauthorized = message.guild.emojis.cache.find(emoji => emoji.name === 'kgbauthorized');
+				//await message.react(kgbauthorized);
+				message.channel.send("Sorry boo :(");
+			}
+			if (start.test(message.content)) {
+				deactivated = false;
+
+				//let uwu = message.guild.emojis.cache.find(emoji => emoji.name === 'uwu');
+				//await message.react(uwu);
+				message.channel.send("uwu");
+			}
 		} else {
 			//DM pipeline handling
 			if (message.channel.type == 'dm') {
@@ -97,27 +115,29 @@ client.on('message', async message => {
 					})
 					.catch(console.error);
 			}
-			//special message reaction handling
-			if (regex_kgb.test(message.content)) {
-				await message.reply('The KGB\'s eyes are always watching');
-			} else if (regex_nyaa.test(message.content)) {
-				await catgirlAdd(message).catch(() => { //call the function to deal with this
-					message.channel.send("It looks like I don't have permission to add you to the catgirl clan nyaa");
-				});
-			} else if (regex_uwu.test(message.content)) {
-				//await message.channel.send('UwU');
-				await message.channel.send("Rawr x3 nuzzles how are you pounces on you you're so warm o3o notices you have a bulge o: someone's happy ;) nuzzles your necky wecky~ murr~ hehehe rubbies your bulgy wolgy you're so big :oooo rubbies more on your bulgy wolgy it doesn't stop growing ·///· kisses you and lickies your necky daddy likies (; nuzzles wuzzles I hope daddy really likes $: wiggles butt and squirms I want to see your big daddy meat~ wiggles butt I have a little itch o3o wags tail can you please get my itch~ puts paws on your chest nyea~ its a seven inch itch rubs your chest can you help me pwease squirms pwetty pwease sad face I need to be punished runs paws down your chest and bites lip like I need to be punished really good~ paws on your bulge as I lick my lips I'm getting thirsty. I can go for some milk unbuttons your pants as my eyes glow you smell so musky :v licks shaft mmmm~ so musky drools all over your cock your daddy meat I like fondles Mr. Fuzzy Balls hehe puts snout on balls and inhales deeply oh god im so hard~ licks balls punish me daddy~ nyea~ squirms more and wiggles butt I love your musky goodness bites lip please punish me licks lips nyea~ suckles on your tip so good licks pre of your cock salty goodness~ eyes role back and goes balls deep mmmm~ moans and suckles");
-			} else if (regex_chase.test(message.content)) {
-				//await message.channel.send(quote('chase_attractive')).catch(() => errorNotify("regex_chase", message.guild));
-			} else if (regex_cat.test(message.content)){
-				if(regex_cat1.test(message.content)){
-					message.channel.send("cat");
-				}else if(regex_cat2.test(message.content)){
-					message.channel.send("Cat.");
-				}else if (regex_cat3.test(message.content)){
-					message.channel.send("Cat");
-				}else{
-					message.channel.send("Cat.");
+			if (!deactivated) {
+				//special message reaction handling
+				if (regex_kgb.test(message.content)) {
+					await message.reply('The KGB\'s eyes are always watching');
+				} else if (regex_nyaa.test(message.content)) {
+					await catgirlAdd(message).catch(() => { //call the function to deal with this
+						message.channel.send("It looks like I don't have permission to add you to the catgirl clan nyaa");
+					});
+				} else if (regex_uwu.test(message.content)) {
+					//await message.channel.send('UwU');
+					await message.channel.send("Rawr x3 nuzzles how are you pounces on you you're so warm o3o notices you have a bulge o: someone's happy ;) nuzzles your necky wecky~ murr~ hehehe rubbies your bulgy wolgy you're so big :oooo rubbies more on your bulgy wolgy it doesn't stop growing ·///· kisses you and lickies your necky daddy likies (; nuzzles wuzzles I hope daddy really likes $: wiggles butt and squirms I want to see your big daddy meat~ wiggles butt I have a little itch o3o wags tail can you please get my itch~ puts paws on your chest nyea~ its a seven inch itch rubs your chest can you help me pwease squirms pwetty pwease sad face I need to be punished runs paws down your chest and bites lip like I need to be punished really good~ paws on your bulge as I lick my lips I'm getting thirsty. I can go for some milk unbuttons your pants as my eyes glow you smell so musky :v licks shaft mmmm~ so musky drools all over your cock your daddy meat I like fondles Mr. Fuzzy Balls hehe puts snout on balls and inhales deeply oh god im so hard~ licks balls punish me daddy~ nyea~ squirms more and wiggles butt I love your musky goodness bites lip please punish me licks lips nyea~ suckles on your tip so good licks pre of your cock salty goodness~ eyes role back and goes balls deep mmmm~ moans and suckles");
+				} else if (regex_chase.test(message.content)) {
+					//await message.channel.send(quote('chase_attractive')).catch(() => errorNotify("regex_chase", message.guild));
+				} else if (regex_cat.test(message.content)) {
+					if (regex_cat1.test(message.content)) {
+						message.channel.send("cat");
+					} else if (regex_cat2.test(message.content)) {
+						message.channel.send("Cat.");
+					} else if (regex_cat3.test(message.content)) {
+						message.channel.send("Cat");
+					} else {
+						message.channel.send("Cat.");
+					}
 				}
 			}
 
@@ -279,7 +299,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
 
 	if (oldMessage.content == newMessage.content) {
 		return;
-	}else if(oldMessage.channel.id == 723612703058559078){ //leaderboard channel
+	} else if (oldMessage.channel.id == 723612703058559078) { //leaderboard channel
 		return;
 	}
 
