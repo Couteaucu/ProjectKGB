@@ -20,16 +20,20 @@ module.exports = {
                         discard = true;
                     }
                 });
-                if(discard == true){
+                if (discard == true) {
                     return false;
-                }else{
+                } else {
                     return true;
                 }
             });
             data.push(commandlist.join(', '));
             data.push(`\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`);
+            data.push("You can '@KGB-chan fuck off' and the bot will stop keyword replies. '@KGB-chan come back' will turn them back on.");
 
-            return message.author.send(data, { split: true })
+            //convert from DM to actual channel.
+            return message.channel.send(data, { split: true });
+
+            /*return message.author.send(data, { split: true })
                 .then(() => {
                     if (message.channel.type === 'dm') return;
                     message.reply('I\'ve sent you a DM with all my commands!');
@@ -37,7 +41,7 @@ module.exports = {
                 .catch(error => {
                     console.error(`Could not send help DM to ${message.author.tag}.\n`, error);
                     message.reply('it seems like I can\'t DM you! Do you have DMs disabled?');
-                });
+                });*/
         }
 
         const name = args[0].toLowerCase();

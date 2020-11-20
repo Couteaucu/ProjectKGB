@@ -22,6 +22,8 @@ const cooldowns = new Discord.Collection();
 const nekotimer = new Discord.Collection();
 client.debufftimers = require('./debuffTime.json'); //Add debuff timers
 var deactivated = false;
+var deactivated_RNG = false;
+var rngProc = false;
 
 //regex
 const regex_uwu = /((uwu)+)/i;
@@ -40,6 +42,8 @@ const regex_cat2 = /(Cat\.){1}/;
 const catRole = 'Nekomimi';
 const stop = /(fuck off){1}/i;
 const start = /(come back){1}/i;
+const stop_RNG = /(stop rng){1}/i;
+const start_RNG = /(start rng){1}/i;
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -81,7 +85,34 @@ client.on('message', async message => {
 				//await message.react(uwu);
 				message.channel.send("uwu");
 			}
+			if (stop_RNG.test(message.content)) {
+				deactivated_RNG = true;
+
+				let kgbauthorized = message.guild.emojis.cache.find(emoji => emoji.name === 'kgbauthorized');
+				await message.react(kgbauthorized);
+			}
+			if (start_RNG.test(message.content)) {
+				deactivated_RNG = false;
+
+				let kgbauthorized = message.guild.emojis.cache.find(emoji => emoji.name === 'kgbauthorized');
+				await message.react(kgbauthorized);
+			}
 		} else {
+			if (!deactivated_RNG) {
+				var rng = getRandomInt(1000);
+				if (rngProc == false) {
+					if (rng == 0) {
+						message.channel.send(":)");
+						rngProc = true;
+					}
+				}else {
+					rng = getRandomInt(15);
+					if (rng == 0) {
+						message.channel.send(":)");
+						rngProc = false;
+					}
+				}
+			}
 			//DM pipeline handling
 			if (message.channel.type == 'dm') {
 				client.channels.fetch('739624963530555504') //bot_dms TestDiscord
@@ -391,6 +422,10 @@ client.on('guildMemberSpeaking', async (member, state) => {
 });
 
 //*****************Functions****************** */
+
+function getRandomInt(max) {
+	return Math.floor(Math.random() * Math.floor(max));
+}
 
 function debuffTimerRemove(client, guild, user, debuff) {
 	const debufftimers = client.debufftimers;
