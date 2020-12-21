@@ -117,7 +117,7 @@ client.on('message', async message => {
 			if (message.channel.type == 'dm') {
 				client.channels.fetch('739624963530555504') //bot_dms TestDiscord
 					.then(channel => {
-						const buildOuput = () => {
+						const buildOutput = () => {
 							var output = "";
 							output += `**From: ${message.author.tag}**`;
 
@@ -130,7 +130,7 @@ client.on('message', async message => {
 						}
 						const sendfunction = async () => {
 							try {
-								const output = buildOuput();
+								const output = buildOutput();
 								await channel.send(output);
 								if (message.attachments.size > 0) {
 									for (var object of message.attachments) {
@@ -270,7 +270,7 @@ client.on('messageDelete', async message => {
 	if (message.guild.id != 376183399792246785) {//Ignore testing discord
 		client.channels.fetch('723363409243930684') //hidden-records Ahegao Support Group
 			.then(channel => {
-				const buildOuput = () => {
+				const buildOutput = () => {
 					var output = "";
 					if (target.id === message.author.id) {
 						output += `__Censored Message__\nAuthor: ${message.author.tag}\nCensor: ${executor.tag}`;
@@ -304,7 +304,7 @@ client.on('messageDelete', async message => {
 				const sendfunction = async () => {
 					try {
 						const isAuthorized = await ignoreAuthorized();
-						const output = buildOuput();
+						const output = buildOutput();
 						if (isAuthorized) {
 							return;
 						}
@@ -338,7 +338,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
 	if (oldMessage.guild.id != 376183399792246785) {//Ignore testing discord
 		client.channels.fetch('723363409243930684') //hidden-records Ahegao Support Group
 			.then(channel => {
-				const buildOuput = () => {
+				const buildOutput = () => {
 					var output = "";
 
 					output += `__Edited Message__\nAuthor: ${oldMessage.author.tag}`;
@@ -356,7 +356,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
 
 				const sendfunction = async () => {
 					try {
-						const output = buildOuput();
+						const output = buildOutput();
 						await channel.send(output);
 						if (oldMessage.attachments.size > 0) {
 							for (var object of oldMessage.attachments) {
@@ -388,41 +388,44 @@ client.on('guildMemberAdd', async member => {
 client.on('guildMemberRemove', async member => { //only works with ASG
 	console.log('User ' + member.user.username + ' has left the server.');
 	var rng = getRandomInt(8);
-	client.channels.fetch('753008311690854414').then(channel => {
-		const buildOuput = () => {
-			var output = "";
-			output += "***@";
-			output += member.user.username;
-			output += "*** ";
+	client.channels.fetch('753008311690854414')
+		.then(channel => {
+			const buildOutput = () => {
+				var output = "";
+				output += "***@";
+				output += member.user.username;
+				output += "*** ";
 
-			if (rng == 0) {
-				output += ":angry:";
-			} else if (rng == 1) {
-				output += "https://www.youtube.com/watch?v=zjedLeVGcfE";
-			} else if (rng == 2) {
-				output += " has left, too many slurs.";
-			} else if (rng == 3) {
-				output += "has transfered to brazil.";
-			} else if (rng == 4) {
-				output += "is retarded.";
-			} else if (rng == 5) {
-				output += "has left to play neopets.";
-			}else if (rng == 6) {
-				output += "has left to play roblox.";
-			}else if (rng == 5) {
-				output += "has left to change their diapers.";
+				if (rng == 0) {
+					output += ":angry:";
+				} else if (rng == 1) {
+					output += "https://www.youtube.com/watch?v=zjedLeVGcfE";
+				} else if (rng == 2) {
+					output += " has left, too many slurs.";
+				} else if (rng == 3) {
+					output += "has transfered to brazil.";
+				} else if (rng == 4) {
+					output += "is retarded.";
+				} else if (rng == 5) {
+					output += "has left to play neopets.";
+				} else if (rng == 6) {
+					output += "has left to play roblox.";
+				} else if (rng == 7) {
+					output += "has left to change their diapers.";
+				}
+
+				return output;
 			}
-		}
-		const sendfunction = async () => {
-			try {
-				const output = buildOuput();
-				await channel.send(output);
-			} catch{
-				console.log("i am retarded");
+			const sendfunction = async () => {
+				try {
+					const output = buildOutput();
+					await channel.send(output);
+				} catch{
+					console.log("i am retarded");
+				}
 			}
-		}
-		sendfunction();
-	})
+			sendfunction();
+		})
 		.catch(console.error);
 
 });
