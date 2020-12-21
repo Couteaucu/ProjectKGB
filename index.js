@@ -418,7 +418,7 @@ client.on('guildMemberRemove', async member => { //only works with ASG
 				const output = buildOuput();
 				await channel.send(output);
 			} catch{
-				errorNotify('Function: DM Pipeline\nError: sending the leave message', message.guild);
+				console.log("i am retarded");
 			}
 		}
 		sendfunction();
