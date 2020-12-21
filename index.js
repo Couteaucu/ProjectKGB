@@ -105,7 +105,7 @@ client.on('message', async message => {
 						message.channel.send(":)");
 						rngProc = true;
 					}
-				}else {
+				} else {
 					rng = getRandomInt(15);
 					if (rng == 0) {
 						message.channel.send(":)");
@@ -383,6 +383,48 @@ client.on('guildMemberAdd', async member => {
 	await member.roles.add(role).catch(() => {
 		member.guild.owner.send(`Something went wrong with the autorole on user: ${member.user.username}`);
 	});
+});
+
+client.on('guildMemberRemove', async member => { //only works with ASG
+	console.log('User ' + member.user.username + ' has left the server.');
+	var rng = getRandomInt(8);
+	client.channels.fetch('753008311690854414').then(channel => {
+		const buildOuput = () => {
+			var output = "";
+			output += "***@";
+			output += member.user.username;
+			output += "*** ";
+
+			if (rng == 0) {
+				output += ":angry:";
+			} else if (rng == 1) {
+				output += "https://www.youtube.com/watch?v=zjedLeVGcfE";
+			} else if (rng == 2) {
+				output += " has left, too many slurs.";
+			} else if (rng == 3) {
+				output += "has transfered to brazil.";
+			} else if (rng == 4) {
+				output += "is retarded.";
+			} else if (rng == 5) {
+				output += "has left to play neopets.";
+			}else if (rng == 6) {
+				output += "has left to play roblox.";
+			}else if (rng == 5) {
+				output += "has left to change their diapers.";
+			}
+		}
+		const sendfunction = async () => {
+			try {
+				const output = buildOuput();
+				await channel.send(output);
+			} catch{
+				errorNotify('Function: DM Pipeline\nError: sending the leave message', message.guild);
+			}
+		}
+		sendfunction();
+	})
+		.catch(console.error);
+
 });
 
 //Emitted whenever a guild member changes - i.e. new role, removed role, nickname.
