@@ -44,6 +44,7 @@ const stop = /(fuck off){1}/i;
 const start = /(come back){1}/i;
 const stop_RNG = /(stop rng){1}/i;
 const start_RNG = /(start rng){1}/i;
+const status = /(status){1}/i;
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -97,9 +98,17 @@ client.on('message', async message => {
 				let kgbauthorized = message.guild.emojis.cache.find(emoji => emoji.name === 'kgbauthorized');
 				await message.react(kgbauthorized);
 			}
+			if (status.test(message.content)) {
+				var response = "Message responses deactivated: ";
+				response += deactivated;
+				response += "\nRNG deactivated: ";
+				response += deactivated_RNG;
+				message.channel.send(response);
+			}
 		} else {
 			if (!deactivated_RNG) {
 				var rng = getRandomInt(1000);
+				var rngZach = getRandomInt(10);
 				if (rngProc == false) {
 					if (rng == 0) {
 						message.channel.send(":)");
@@ -111,6 +120,10 @@ client.on('message', async message => {
 						message.channel.send(":)");
 						rngProc = false;
 					}
+				}
+
+				if (rngZach == 0) {
+					message.channel.send("-  yo im back if ya wanna smash");
 				}
 			}
 			//DM pipeline handling
