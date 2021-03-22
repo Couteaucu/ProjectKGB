@@ -108,7 +108,7 @@ client.on('message', async message => {
 		} else {
 			if (!deactivated_RNG) {
 				var rng = getRandomInt(1000);
-				var rngZach = getRandomInt(10);
+				var rngZach = getRandomInt(250);
 				if (rngProc == false) {
 					if (rng == 0) {
 						message.channel.send(":)");
