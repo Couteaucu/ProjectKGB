@@ -39,6 +39,8 @@ const regex_cat = /(cat){1}/i;
 const regex_cat1 = /(cat){1}/;
 const regex_cat3 = /^(Cat){1}$/;
 const regex_cat2 = /(Cat\.){1}/;
+const regex_hot = /(hot){1}/i;
+
 const catRole = 'Nekomimi';
 const stop = /(fuck off){1}/i;
 const start = /(come back){1}/i;
@@ -182,6 +184,8 @@ client.on('message', async message => {
 					} else {
 						message.channel.send("Cat.");
 					}
+				}else if (regex_hot.test(message.content)) {
+					await message.author.send("https://tenor.com/view/lewd-gif-19433521");
 				}
 			}
 
